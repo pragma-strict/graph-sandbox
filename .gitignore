@@ -1,2 +1,6 @@
 # ignore .psd files
 *.psd
+
+# ignore word files
+*.doc
+*.docx
