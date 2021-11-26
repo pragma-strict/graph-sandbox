@@ -1,27 +1,51 @@
+/*
+  Currently, this file contains data and functions related to:
+    - Getting and parsing input from the DOM
+    - Setting up and maintaining the p5 canvas
+    - 
+  The contents of this file should possibly be divided up into other files or other classes.
+  I will do this once there is enough here to make a reasonable decision about how to refactor.
+*/
+
 // DOM Ids and elements
 let ID_PARENT = 'p5-canvas-container';
 let INTERFACE_DATA;
-let INTERFACE_OUT_UNSORTED;
-let INTERFACE_OUT_SORTED;
 
-let p5Display;
+let canvas;
+
 let input_raw = [];
-let input_sorted = [];
 let iterations = 0;
 
 
 function setup() {
-  p5Display = new Display(ID_PARENT);
   INTERFACE_DATA = document.getElementById('interface-data');
   INTERFACE_OUT_UNSORTED = document.getElementById('interface-out-unsorted');
-  INTERFACE_OUT_SORTED = document.getElementById('interface-out-sorted');
+  initializeP5Canvas();
   noLoop();
+}
+
+
+function initializeP5Canvas(){
+  let parentStyle = window.getComputedStyle(document.getElementById(ID_PARENT));
+  canvas = createCanvas(parseInt(parentStyle.width), parseInt(parentStyle.height));
+  canvas.parent(ID_PARENT);
+}
+
+
+function updateCanvasSize(){
+  let parentStyle = window.getComputedStyle(document.getElementById(ID_PARENT));
+  resizeCanvas(parseInt(parentStyle.width), parseInt(parentStyle.height));
+  render();
+}
+
+
+function render(){
+  background(BG_COL);
 }
 
 
 function getInput(){
   input_raw = [];
-  input_sorted = [];
   parseInputData();
 }
 
@@ -58,39 +82,11 @@ function parseInputData(){
 
 function keyPressed(){
   if(keyCode === ENTER){
-    if(iterations < input_raw.length){
-      p5Display.heap.addNode(input_raw[iterations]);
-      if(iterations != 0){
-        INTERFACE_OUT_UNSORTED.innerHTML += ", ";
-      }
-      INTERFACE_OUT_UNSORTED.innerHTML += input_raw[iterations];
-    }
-    else if(iterations < input_raw.length * 2){
-      if(iterations != input_raw.length){
-        INTERFACE_OUT_SORTED.innerHTML += ", ";
-      }
-      input_sorted.push(p5Display.heap.removeMin());
-      INTERFACE_OUT_SORTED.innerHTML += input_sorted[input_sorted.length -1];
-    }
-    else{
-      iterations = -1;
-      INTERFACE_OUT_UNSORTED.innerHTML = '';
-      INTERFACE_OUT_SORTED.innerHTML = '';
-      input_sorted = [];
-    }
-    iterations++;
-    p5Display.render();
-
-    // Draw the arrays to the screen
-    fill(0);
-    strokeWeight(1);
-    textAlign(LEFT, TOP);
-    text("input: " + input_raw.slice(0, iterations), 25, 25);
-    text("sorted: " + input_sorted, 25, 45);
+    
   }
 }
 
 
 function windowResized() {
-  p5Display.updateCanvasSize();
+  updateCanvasSize();
 }
