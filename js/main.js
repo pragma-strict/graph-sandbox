@@ -13,21 +13,23 @@ let INTERFACE_DATA;
 
 let canvas;
 
+let origin;
+let drag_handle_coords; // The mouse position relative to origin whenever LMB is pressed
+
 let input_raw = [];
 let iterations = 0;
 
 
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
-  INTERFACE_OUT_UNSORTED = document.getElementById('interface-out-unsorted');
   initializeP5Canvas();
-  noLoop();
 }
 
 
 function initializeP5Canvas(){
   let parentStyle = window.getComputedStyle(document.getElementById(ID_PARENT));
   canvas = createCanvas(parseInt(parentStyle.width), parseInt(parentStyle.height));
+  origin = createVector(width/2, height/2);
   canvas.parent(ID_PARENT);
 }
 
@@ -35,12 +37,18 @@ function initializeP5Canvas(){
 function updateCanvasSize(){
   let parentStyle = window.getComputedStyle(document.getElementById(ID_PARENT));
   resizeCanvas(parseInt(parentStyle.width), parseInt(parentStyle.height));
-  render();
 }
 
 
-function render(){
+function draw(){
   background(BG_COL);
+
+  // Render a crosshair at the origin
+  stroke(0);
+  strokeWeight(1);
+  fill(0);
+  line(origin.x, 0, origin.x, height);
+  line(0, origin.y, width, origin.y);
 }
 
 
@@ -77,6 +85,20 @@ function parseInputData(){
   if(isPrevCharNumber){
     input_raw.push(number);
   }
+}
+
+
+// Logs the mouse position relative to the origin so that the 
+// origin can be repositioned relative to the mouse during mouse drag.
+function mousePressed(){
+  drag_handle_coords = createVector(mouseX - origin.x, mouseY - origin.y);
+}
+
+
+// Reposition the origin
+function mouseDragged(){
+  origin.x = mouseX - drag_handle_coords.x;
+  origin.y = mouseY - drag_handle_coords.y;
 }
 
 
