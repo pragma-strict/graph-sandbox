@@ -5,6 +5,11 @@
     - 
   The contents of this file should possibly be divided up into other files or other classes.
   I will do this once there is enough here to make a reasonable decision about how to refactor.
+
+  Consider moving the origin and related functions to a different file that gets included first so that all the origin can be a global.
+
+  TODO:
+  - Integrate typescript because I'm tired of bugs that don't give errors
 */
 
 // DOM Ids and elements
@@ -13,10 +18,11 @@ let INTERFACE_DATA;
 
 let canvas;
 
-let origin;
+let worldOrigin;
+let isDragging = false; // True when the world itself is being dragged
 let dragHandleCoords; // The mouse position relative to origin whenever LMB is pressed
 
-let testNode;
+let tree;
 
 let inputRaw = [];
 let iterations = 0;
@@ -25,14 +31,16 @@ let iterations = 0;
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
   initializeP5Canvas();
-  testNode = new Node();
+  tree = new Tree();
+  tree.addTreeNode(4);
+  tree.addTreeNode(5);
 }
 
 
 function initializeP5Canvas(){
   let parentStyle = window.getComputedStyle(document.getElementById(ID_PARENT));
   canvas = createCanvas(parseInt(parentStyle.width), parseInt(parentStyle.height));
-  origin = createVector(width/2, height/2);
+  worldOrigin = createVector(width/2, height/2);
   canvas.parent(ID_PARENT);
 }
 
@@ -45,7 +53,7 @@ function updateCanvasSize(){
 
 function draw(){
   background(BG_COL);
-  testNode.render(origin, 0, RED);
+  tree.render(worldOrigin);
 }
 
 
@@ -88,14 +96,28 @@ function parseInputData(){
 // Logs the mouse position relative to the origin so that the 
 // origin can be repositioned relative to the mouse during mouse drag.
 function mousePressed(){
-  dragHandleCoords = createVector(mouseX - origin.x, mouseY - origin.y);
+  if(!tree.mousePressed(worldOrigin)){
+    dragHandleCoords = createVector(mouseX - worldOrigin.x, mouseY - worldOrigin.y);
+    isDragging = true;
+  }
+}
+
+
+function mouseReleased(){
+  isDragging = false;
+  tree.mouseReleased();
 }
 
 
 // Reposition the origin
 function mouseDragged(){
-  origin.x = mouseX - dragHandleCoords.x;
-  origin.y = mouseY - dragHandleCoords.y;
+  if(isDragging){
+    worldOrigin.x = mouseX - dragHandleCoords.x;
+    worldOrigin.y = mouseY - dragHandleCoords.y;
+  }
+  else{
+    tree.mouseDragged(worldOrigin);
+  }
 }
 
 
