@@ -6,6 +6,9 @@ class Tree{
       this.selectedNode;
       this.nodeSize;
       this.traversalStack = [this.rootNode];
+      this.hoveredColor = color(255, 255, 255, 50);
+      this.baseColor = 0;
+      this.selectedColor = RED;
    }
 
 
@@ -18,7 +21,7 @@ class Tree{
       else{
          this.rootNode.addChild(newNode);
       }
-      //this.selectedNode = newNode;
+      this.selectedNode = newNode;
       this.traversalStack = [];
       this.traversalStack = this.getPreorderTraversal(this.rootNode, this.traversalStack);
    }
@@ -89,9 +92,15 @@ class Tree{
 
    render(worldOrigin){
       if(this.rootNode){
-         this.traversalStack.forEach(node => {
-            node.render(worldOrigin, 0, RED);
-         });
+         for(let i = 0; i < this.traversalStack.length; i++){
+            let currentNode = this.traversalStack[i];
+            if(currentNode === this.selectedNode){
+               currentNode.render(worldOrigin, this.selectedColor, this.hoveredColor);
+            }
+            else{
+               currentNode.render(worldOrigin, this.baseColor, this.hoveredColor);
+            }
+         }
       }
    }
 }

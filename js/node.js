@@ -13,23 +13,31 @@ class Node{
 
 
    render(worldOrigin, baseColor, highlightColor){
-      noStroke();
-      let x = worldOrigin.x + this.coordinates.x;
-      let y = worldOrigin.y + this.coordinates.y;
+      let screenPos = this.getScreenPosition(worldOrigin);
       
-      // Set the colour
+      // Draw lines to neighbors
+      strokeWeight(2);
+      stroke(0);
+      for(let i = 0; i < this.neighborRefs.length; i++){
+         let neighborScreenPos = this.neighborRefs[i].getScreenPosition(worldOrigin);
+         line(screenPos.x, screenPos.y, neighborScreenPos.x, neighborScreenPos.y);
+      }
+
+      // Draw the ellipse
+      noStroke();
       fill(baseColor);
+      ellipse(screenPos.x, screenPos.y, this.size);
+
+      // Add a highlight if mouse is over
       if(this.isMouseOver(worldOrigin)){
          fill(highlightColor);
+         ellipse(screenPos.x, screenPos.y, this.size);
       }
-      
-      // Draw the ellipse
-      ellipse(x, y, this.size);
 
       // Draw the text
       fill(255);
       textAlign(CENTER, CENTER);
-      text(this.value, x, y);
+      text(this.value, screenPos.x, screenPos.y);
    }
 
 
@@ -78,6 +86,14 @@ class Node{
          this.coordinates.x = mouseX - worldOrigin.x;
          this.coordinates.y = mouseY - worldOrigin.y;
       }
+   }
+
+
+   getScreenPosition(worldOrigin){
+      let screenPos = createVector();
+      screenPos.x = worldOrigin.x + this.coordinates.x;
+      screenPos.y = worldOrigin.y + this.coordinates.y;
+      return screenPos;
    }
 }
 
