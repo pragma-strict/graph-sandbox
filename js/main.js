@@ -16,6 +16,8 @@ let canvas;
 let origin;
 let drag_handle_coords; // The mouse position relative to origin whenever LMB is pressed
 
+let test_node;
+
 let input_raw = [];
 let iterations = 0;
 
@@ -23,6 +25,7 @@ let iterations = 0;
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
   initializeP5Canvas();
+  test_node = new Node();
 }
 
 
@@ -42,13 +45,7 @@ function updateCanvasSize(){
 
 function draw(){
   background(BG_COL);
-
-  // Render a crosshair at the origin
-  stroke(0);
-  strokeWeight(1);
-  fill(0);
-  line(origin.x, 0, origin.x, height);
-  line(0, origin.y, width, origin.y);
+  test_node.render(origin);
 }
 
 
