@@ -14,18 +14,18 @@ let INTERFACE_DATA;
 let canvas;
 
 let origin;
-let drag_handle_coords; // The mouse position relative to origin whenever LMB is pressed
+let dragHandleCoords; // The mouse position relative to origin whenever LMB is pressed
 
-let test_node;
+let testNode;
 
-let input_raw = [];
+let inputRaw = [];
 let iterations = 0;
 
 
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
   initializeP5Canvas();
-  test_node = new Node();
+  testNode = new Node();
 }
 
 
@@ -45,23 +45,23 @@ function updateCanvasSize(){
 
 function draw(){
   background(BG_COL);
-  test_node.render(origin);
+  testNode.render(origin, 0, RED);
 }
 
 
 function getInput(){
-  input_raw = [];
+  inputRaw = [];
   parseInputData();
 }
 
 
 // Read input data from DOM and store it into the input array
 function parseInputData(){
-  let raw_data = INTERFACE_DATA.value;
+  let rawData = INTERFACE_DATA.value;
   let number = 0;
   let isPrevCharNumber = false;
-  for(let i = 0; i < raw_data.length; i++){
-    let char = raw_data[i];
+  for(let i = 0; i < rawData.length; i++){
+    let char = rawData[i];
     if(!isNaN(char) && char != ' '){ // Current char is a number
       char = parseInt(char);
       if(isPrevCharNumber){
@@ -72,7 +72,7 @@ function parseInputData(){
     }
     else{   // Current char is NOT a number
       if(isPrevCharNumber){
-        input_raw.push(number);
+        inputRaw.push(number);
         number = 0;
         isPrevCharNumber = false;
       }
@@ -80,7 +80,7 @@ function parseInputData(){
   }
   // If the string ended on a number, include it too.
   if(isPrevCharNumber){
-    input_raw.push(number);
+    inputRaw.push(number);
   }
 }
 
@@ -88,14 +88,14 @@ function parseInputData(){
 // Logs the mouse position relative to the origin so that the 
 // origin can be repositioned relative to the mouse during mouse drag.
 function mousePressed(){
-  drag_handle_coords = createVector(mouseX - origin.x, mouseY - origin.y);
+  dragHandleCoords = createVector(mouseX - origin.x, mouseY - origin.y);
 }
 
 
 // Reposition the origin
 function mouseDragged(){
-  origin.x = mouseX - drag_handle_coords.x;
-  origin.y = mouseY - drag_handle_coords.y;
+  origin.x = mouseX - dragHandleCoords.x;
+  origin.y = mouseY - dragHandleCoords.y;
 }
 
 
