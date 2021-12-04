@@ -9,9 +9,9 @@
   Consider moving the origin and related functions to a different file that gets included first so that all the origin can be a global.
 
   TODO:
+  - Make an add node hotkey
+  - Make a dynamic HTML interface (left-click menu) to make styling easier and more consistent. This menu will appear when left clicking (to make desktop/mobile compatibility easier) and will be used for things like adding nodes, which could also be done via hotkey 
   - Integrate typescript because I'm tired of bugs that don't give errors
-  - In the middle of adding world class to store origin and make it easier to access. Just need to swap all
-    references to origin to access it directly from the world now, instead of using parameters.
 */
 
 // DOM Ids and elements
