@@ -12,14 +12,14 @@ class Node{
    }
 
 
-   render(worldOrigin, baseColor, highlightColor){
-      let screenPos = this.getScreenPosition(worldOrigin);
+   render(baseColor, highlightColor){
+      let screenPos = this.getScreenPosition(world.origin);
       
       // Draw lines to neighbors
       strokeWeight(2);
       stroke(0);
       for(let i = 0; i < this.neighborRefs.length; i++){
-         let neighborScreenPos = this.neighborRefs[i].getScreenPosition(worldOrigin);
+         let neighborScreenPos = this.neighborRefs[i].getScreenPosition(world.origin);
          line(screenPos.x, screenPos.y, neighborScreenPos.x, neighborScreenPos.y);
       }
 
@@ -29,7 +29,7 @@ class Node{
       ellipse(screenPos.x, screenPos.y, this.size);
 
       // Add a highlight if mouse is over
-      if(this.isMouseOver(worldOrigin)){
+      if(this.isMouseOver(world.origin)){
          fill(highlightColor);
          ellipse(screenPos.x, screenPos.y, this.size);
       }
@@ -56,8 +56,8 @@ class Node{
 
 
    // Return true if the mouse if over the node
-   isMouseOver(worldOrigin){
-      let nodePos = createVector(worldOrigin.x + this.coordinates.x, worldOrigin.y + this.coordinates.y)
+   isMouseOver(){
+      let nodePos = createVector(world.origin.x + this.coordinates.x, world.origin.y + this.coordinates.y)
       let mousePos = createVector(mouseX, mouseY);
       if(nodePos.dist(mousePos) <= this.size/1.5){
          return true;
@@ -66,8 +66,8 @@ class Node{
    }
 
 
-   mousePressed(worldOrigin){
-      if(this.isMouseOver(worldOrigin)){
+   mousePressed(){
+      if(this.isMouseOver()){
          this.isDragging = true;
       }
       else{
@@ -81,18 +81,18 @@ class Node{
    }
 
 
-   mouseDragged(worldOrigin){
+   mouseDragged(){
       if(this.isDragging){
-         this.coordinates.x = mouseX - worldOrigin.x;
-         this.coordinates.y = mouseY - worldOrigin.y;
+         this.coordinates.x = mouseX - world.origin.x;
+         this.coordinates.y = mouseY - world.origin.y;
       }
    }
 
 
-   getScreenPosition(worldOrigin){
+   getScreenPosition(){
       let screenPos = createVector();
-      screenPos.x = worldOrigin.x + this.coordinates.x;
-      screenPos.y = worldOrigin.y + this.coordinates.y;
+      screenPos.x = world.origin.x + this.coordinates.x;
+      screenPos.y = world.origin.y + this.coordinates.y;
       return screenPos;
    }
 }

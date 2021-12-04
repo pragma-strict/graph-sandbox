@@ -49,9 +49,9 @@ class Tree{
 
 
    // Return a node ref if the mouse is over a node, else false
-   getHoveredNode(worldOrigin){
+   getHoveredNode(){
       for(let i = 0; i < this.traversalStack.length; i++){
-         if(this.traversalStack[i].isMouseOver(worldOrigin)){
+         if(this.traversalStack[i].isMouseOver()){
             return this.traversalStack[i];
          }
       }
@@ -60,16 +60,16 @@ class Tree{
 
 
    // Return a node ref if the mouse is over a node, else false. Alias for getHoveredNode()
-   isMouseOver(worldOrigin){
-      return this.getHoveredNode(worldOrigin);
+   isMouseOver(){
+      return this.getHoveredNode();
    }
 
 
    // Return true if a node was selected
-   mousePressed(worldOrigin){
-      this.selectedNode = this.getHoveredNode(worldOrigin);
+   mousePressed(){
+      this.selectedNode = this.getHoveredNode();
       if(this.selectedNode){
-         this.selectedNode.mousePressed(worldOrigin);
+         this.selectedNode.mousePressed();
          return true;
       }
       return false;
@@ -83,22 +83,23 @@ class Tree{
    }
 
 
-   mouseDragged(worldOrigin){
+   mouseDragged(){
       if(this.selectedNode){
-         this.selectedNode.mouseDragged(worldOrigin);
+         this.selectedNode.mouseDragged();
       }
    }
 
 
-   render(worldOrigin){
+   render(){
+      //console.log("ne")
       if(this.rootNode){
          for(let i = 0; i < this.traversalStack.length; i++){
             let currentNode = this.traversalStack[i];
             if(currentNode === this.selectedNode){
-               currentNode.render(worldOrigin, this.selectedColor, this.hoveredColor);
+               currentNode.render(this.selectedColor, this.hoveredColor);
             }
             else{
-               currentNode.render(worldOrigin, this.baseColor, this.hoveredColor);
+               currentNode.render(this.baseColor, this.hoveredColor);
             }
          }
       }

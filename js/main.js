@@ -10,6 +10,8 @@
 
   TODO:
   - Integrate typescript because I'm tired of bugs that don't give errors
+  - In the middle of adding world class to store origin and make it easier to access. Just need to swap all
+    references to origin to access it directly from the world now, instead of using parameters.
 */
 
 // DOM Ids and elements
@@ -17,10 +19,6 @@ let ID_PARENT = 'p5-canvas-container';
 let INTERFACE_DATA;
 
 let canvas;
-
-let worldOrigin;
-let isDragging = false; // True when the world itself is being dragged
-let dragHandleCoords; // The mouse position relative to origin whenever LMB is pressed
 
 let tree;
 
@@ -31,6 +29,7 @@ let iterations = 0;
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
   initializeP5Canvas();
+  world = new World();
   tree = new Tree();
   tree.addTreeNode(4);
   tree.addTreeNode(5);
@@ -53,7 +52,7 @@ function updateCanvasSize(){
 
 function draw(){
   background(BG_COL);
-  tree.render(worldOrigin);
+  tree.render();
 }
 
 
@@ -96,27 +95,25 @@ function parseInputData(){
 // Logs the mouse position relative to the origin so that the 
 // origin can be repositioned relative to the mouse during mouse drag.
 function mousePressed(){
-  if(!tree.mousePressed(worldOrigin)){
-    dragHandleCoords = createVector(mouseX - worldOrigin.x, mouseY - worldOrigin.y);
-    isDragging = true;
+  if(!tree.mousePressed()){
+    world.mousePressed();
   }
 }
 
 
 function mouseReleased(){
-  isDragging = false;
+  world.mouseReleased();
   tree.mouseReleased();
 }
 
 
 // Reposition the origin
 function mouseDragged(){
-  if(isDragging){
-    worldOrigin.x = mouseX - dragHandleCoords.x;
-    worldOrigin.y = mouseY - dragHandleCoords.y;
+  if(world.isDragging){
+    world.mouseDragged();
   }
   else{
-    tree.mouseDragged(worldOrigin);
+    tree.mouseDragged();
   }
 }
 
