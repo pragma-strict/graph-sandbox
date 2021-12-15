@@ -13,13 +13,16 @@ class Node{
 
 
    render(baseColor, highlightColor){
-      let screenPos = this.getScreenPosition(world.origin);
+      let screenPos = world.worldToScreenPosition(this.coordinates);
       
       // Draw lines to neighbors
       strokeWeight(2);
-      stroke(0);
       for(let i = 0; i < this.neighborRefs.length; i++){
-         let neighborScreenPos = this.neighborRefs[i].getScreenPosition(world.origin);
+         stroke(0);
+         let neighborScreenPos = world.worldToScreenPosition(this.neighborRefs[i].coordinates);
+         if(world.isMouseOverLine(screenPos, neighborScreenPos, 10)){
+            stroke(RED);
+         }
          line(screenPos.x, screenPos.y, neighborScreenPos.x, neighborScreenPos.y);
       }
 
@@ -66,6 +69,12 @@ class Node{
    }
 
 
+   // Return true if mouse is over the edge between two nodes
+   static isMouseOverEdge(n1, n2){
+      return world.isMouseOverLine(n1.coordinates, n2.coordinates, 10)
+   }
+
+
    mousePressed(){
       if(this.isMouseOver()){
          this.isDragging = true;
@@ -89,6 +98,7 @@ class Node{
    }
 
 
+   // TODO: Move this to world.js as worldToScreenPosition()
    getScreenPosition(){
       let screenPos = createVector();
       screenPos.x = world.origin.x + this.coordinates.x;

@@ -28,4 +28,28 @@ class World{
       this.origin.y = mouseY - this.dragHandleCoords.y;
       }
    }
+
+
+   // Begin and end points are world positions (not screen positions)
+   // TODO: Make work better on near-vertical lines by creating parallel lines offset by the thickness
+   isMouseOverLine(begin, end, thickness){
+      //begin = this.worldToScreenPosition(begin);
+      //end = this.worldToScreenPosition(end);
+      let m = (begin.y - end.y) / (begin.x - end.x);  // Slope
+      let b = begin.y - begin.x * m;   // Intercept
+      if(mouseX >= min(begin.x, end.x) && mouseX <= max(begin.x, end.x)){
+         if(mouseY >= m * mouseX + b - thickness && mouseY <= m * mouseX + b + thickness){
+            return true;
+         }
+      }
+   }
+
+
+   // Return the screen position of a given world position
+   worldToScreenPosition(worldPos){
+      let screenPos = createVector();
+      screenPos.x = this.origin.x + worldPos.x;
+      screenPos.y = this.origin.y + worldPos.y;
+      return screenPos;
+   }
 }
