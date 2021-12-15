@@ -91,7 +91,6 @@ class Tree{
 
 
    render(){
-      //console.log("ne")
       if(this.rootNode){
          for(let i = 0; i < this.traversalStack.length; i++){
             let currentNode = this.traversalStack[i];
