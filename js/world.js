@@ -30,17 +30,83 @@ class World{
    }
 
 
+   // Return the slope between two points
+   findSlope(a, b){
+      return (a.y - b.y) / (a.x - b.x);
+   }
+
+
+   // Return the y-intercept of a line
+   findIntercept(point, slope){
+      return point.y - point.x * slope;
+   }
+
+
    // Begin and end points are world positions (not screen positions)
-   // TODO: Make work better on near-vertical lines by creating parallel lines offset by the thickness
+   // TODO: Make it actually check the bounds of a quad rather than just a top and bottom
+   // TODO: Make it work better with near-vertical lines. Note the collision lines aren't parallel w/ original.
+   isMouseOverLineOld(begin, end, thickness){
+      let left = begin.x < end.x ? begin : end;
+      let right = begin.x >= end.x ? begin : end;
+      
+      let vec = p5.Vector.sub(left, right);
+      let perp = vec.copy();
+      perp.rotate(-90);
+      perp.setMag(thickness);
+      
+      let originBottom = p5.Vector.add(left, perp);
+      let originTop = p5.Vector.add(left, perp.mult(-1));
+
+      if(mouseX >= left.x && mouseX <= right.x){   // Check horizontally between left and right
+         let mousePos = createVector(mouseX, mouseY);
+         if(this.isPointAboveLine(mousePos, originBottom, p5.Vector.add(originBottom, vec))){
+            if(!this.isPointAboveLine(mousePos, originTop, p5.Vector.add(originTop, vec))){
+               return true;
+            }
+         }
+      }
+   }
+
+
    isMouseOverLine(begin, end, thickness){
-      //begin = this.worldToScreenPosition(begin);
-      //end = this.worldToScreenPosition(end);
+      let left = begin.x < end.x ? begin : end;
+      let right = begin.x >= end.x ? begin : end;
+      
+      let vec = p5.Vector.sub(left, right);
+      let perp = vec.copy();
+      perp.rotate(-90);
+      perp.setMag(thickness);
+      
+      let topLeft = p5.Vector.add(left, perp);
+      let topRight = p5.Vector.add(right, perp);
+      let bottomLeft = p5.Vector.add(left, perp.mult(-1));
+      let bottomRight = p5.Vector.add(right, perp.mult(-1));
+      
+      let mousePos = createVector(mouseX, mouseY);
+      return this.isPointInQuad(mousePos, topLeft, topRight, bottomLeft, bottomRight);
+   }
+
+
+   // Return true if point is between all 4 points.
+   isPointInQuad(point, topLeft, topRight, bottomLeft, bottomRight){
+      let topBound = this.isPointAboveLine(point, topLeft, topRight);
+      let bottomBound = !this.isPointAboveLine(point, bottomLeft, bottomRight);
+      //let leftBound = this.isPointAboveLine(point, bottomLeft, topLeft);
+      //let rightBound = this.isPointAboveLine(point, topRight, bottomRight);
+      if(topBound && bottomBound){
+         return true;
+      }
+      return false;
+   }
+
+
+   // Return true if a point is above a line, false if on or below line.
+   // TODO: should probably check for divide-by-0
+   isPointAboveLine(point, begin, end){
       let m = (begin.y - end.y) / (begin.x - end.x);  // Slope
       let b = begin.y - begin.x * m;   // Intercept
-      if(mouseX >= min(begin.x, end.x) && mouseX <= max(begin.x, end.x)){
-         if(mouseY >= m * mouseX + b - thickness && mouseY <= m * mouseX + b + thickness){
-            return true;
-         }
+      if(point.y < m * point.x + b){
+         return true;
       }
    }
 
