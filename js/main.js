@@ -52,6 +52,7 @@ function updateCanvasSize(){
 
 function draw(){
   background(BG_COL);
+  world.drawGrid();
   tree.render();
 }
 
