@@ -9,6 +9,7 @@ class Node{
       this.neighborRefs = [];
       this.state = 0;   // Used during traversals to avoid checking the same node more than once
       this.isDragging = false;
+      this.dragHandleOffset = createVector();   // Relative mouse pos when dragging
    }
 
 
@@ -61,7 +62,7 @@ class Node{
 
    // Return true if the mouse if over the node
    isMouseOver(){
-      let nodePos = createVector(world.origin.x + this.coordinates.x, world.origin.y + this.coordinates.y)
+      let nodePos = world.worldToScreenPosition(this.coordinates);
       let mousePos = createVector(mouseX, mouseY);
       if(nodePos.dist(mousePos) <= this.size/1.5){
          return true;
@@ -79,6 +80,8 @@ class Node{
    mousePressed(){
       if(this.isMouseOver()){
          this.isDragging = true;
+         let mouseWorldPos = world.screenToWorldPosition(createVector(mouseX, mouseY));
+         this.dragHandleOffset = p5.Vector.sub(this.coordinates, mouseWorldPos);
       }
       else{
          this.isDragging = false;
@@ -93,8 +96,8 @@ class Node{
 
    mouseDragged(){
       if(this.isDragging){
-         this.coordinates.x = mouseX - world.origin.x;
-         this.coordinates.y = mouseY - world.origin.y;
+         let mouseWorldPos = world.screenToWorldPosition(createVector(mouseX, mouseY));
+         this.coordinates = mouseWorldPos.add(this.dragHandleOffset);
       }
    }
 

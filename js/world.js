@@ -5,7 +5,7 @@ class World{
    constructor(){
       this.origin = createVector(width/2, height/2);
       this.isDragging = false;
-      this.dragHandleCoords = createVector(); // Mouse position relative to origin whenever LMB is pressed
+      this.dragHandleOffset = createVector(); // Mouse position relative to origin whenever LMB is pressed
       this.gridTileSize = 10;
       this.halfGridTileSize = 5;
       this.gridWidth = ceil(width / this.gridTileSize);
@@ -14,7 +14,7 @@ class World{
 
    // Log mouse position relative to origin so that the origin can be repositioned during mouse drag.
    mousePressed(){
-      this.dragHandleCoords = createVector(mouseX - world.origin.x, mouseY - world.origin.y);
+      this.dragHandleOffset = createVector(mouseX - world.origin.x, mouseY - world.origin.y);
       this.isDragging = true;
    }
    
@@ -28,8 +28,8 @@ class World{
    // Reposition the origin
    mouseDragged(){
       if(this.isDragging){
-      this.origin.x = mouseX - this.dragHandleCoords.x;
-      this.origin.y = mouseY - this.dragHandleCoords.y;
+      this.origin.x = mouseX - this.dragHandleOffset.x;
+      this.origin.y = mouseY - this.dragHandleOffset.y;
       }
    }
 
