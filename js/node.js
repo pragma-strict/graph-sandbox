@@ -25,7 +25,8 @@ class Node{
          if(world.isPointOverLine(mousePos, screenPos, neighborScreenPos, 10)){
             stroke(RED);
          }
-         line(screenPos.x, screenPos.y, neighborScreenPos.x, neighborScreenPos.y);
+         let edge = World.trimLine(screenPos, neighborScreenPos, 40);
+         line(edge.begin.x, edge.begin.y, edge.end.x, edge.end.y);
       }
 
       // Draw the ellipse
