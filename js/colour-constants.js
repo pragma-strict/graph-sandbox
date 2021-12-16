@@ -6,4 +6,11 @@ var BG_COL_SHADE_1 = [BG_COL[0] - BG_COL_SHADE_AMT, BG_COL[1] - BG_COL_SHADE_AMT
 var BG_COL_SHADE_2 = [BG_COL[0] - 2*BG_COL_SHADE_AMT, BG_COL[1] - 2*BG_COL_SHADE_AMT, BG_COL[2] - 2*BG_COL_SHADE_AMT];
 
 // Basic
-var RED = [216, 41, 41];
+let RED = '#FF0000';
+let TEAL = '#008080';
+let MAROON = '#800000';
+let PURPLE = '#800080';
+let GREEN = '#008000';
+let FUCHSIA = '#FF00FF';
+let BLUE = '#0000FF';
+let BLACK = '#000000';

@@ -14,13 +14,14 @@ class Node{
 
    render(baseColor, highlightColor){
       let screenPos = world.worldToScreenPosition(this.coordinates);
+      let mousePos = createVector(mouseX, mouseY);
       
       // Draw lines to neighbors
       strokeWeight(2);
       for(let i = 0; i < this.neighborRefs.length; i++){
          stroke(0);
          let neighborScreenPos = world.worldToScreenPosition(this.neighborRefs[i].coordinates);
-         if(world.isMouseOverLine(screenPos, neighborScreenPos, 10)){
+         if(world.isPointOverLine(mousePos, screenPos, neighborScreenPos, 10)){
             stroke(RED);
          }
          line(screenPos.x, screenPos.y, neighborScreenPos.x, neighborScreenPos.y);

@@ -25,10 +25,10 @@ let tree;
 let inputRaw = [];
 let iterations = 0;
 
-
 function setup() {
   INTERFACE_DATA = document.getElementById('interface-data');
   initializeP5Canvas();
+  angleMode(DEGREES);
   world = new World();
   tree = new Tree();
   tree.addTreeNode(4);

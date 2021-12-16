@@ -32,6 +32,9 @@ class World{
 
    // Return the slope between two points
    findSlope(a, b){
+      if(a.x == b.x){
+         return 9999999.00;
+      }
       return (a.y - b.y) / (a.x - b.x);
    }
 
@@ -42,58 +45,56 @@ class World{
    }
 
 
-   // Begin and end points are world positions (not screen positions)
-   // TODO: Make it actually check the bounds of a quad rather than just a top and bottom
-   // TODO: Make it work better with near-vertical lines. Note the collision lines aren't parallel w/ original.
-   isMouseOverLineOld(begin, end, thickness){
+   // Return true if point collides with a line with a given thickness
+   isPointOverLine(point, begin, end, thickness){
       let left = begin.x < end.x ? begin : end;
-      let right = begin.x >= end.x ? begin : end;
+      let right = begin.x < end.x ? end : begin;
       
       let vec = p5.Vector.sub(left, right);
-      let perp = vec.copy();
-      perp.rotate(-90);
-      perp.setMag(thickness);
       
-      let originBottom = p5.Vector.add(left, perp);
-      let originTop = p5.Vector.add(left, perp.mult(-1));
+      let up = vec.copy();
+      up.rotate(90);
+      up.setMag(thickness);
 
-      if(mouseX >= left.x && mouseX <= right.x){   // Check horizontally between left and right
-         let mousePos = createVector(mouseX, mouseY);
-         if(this.isPointAboveLine(mousePos, originBottom, p5.Vector.add(originBottom, vec))){
-            if(!this.isPointAboveLine(mousePos, originTop, p5.Vector.add(originTop, vec))){
-               return true;
-            }
-         }
-      }
+      let down = vec.copy();
+      down.rotate(-90);
+      down.setMag(thickness);
+      
+      let topLeft = p5.Vector.add(left, up);
+      let topRight = p5.Vector.add(right, up);
+      let bottomLeft = p5.Vector.add(left, down);
+      let bottomRight = p5.Vector.add(right, down);
+
+      return this.isPointInQuad(point, topLeft, topRight, bottomRight, bottomLeft);
    }
 
 
-   isMouseOverLine(begin, end, thickness){
-      let left = begin.x < end.x ? begin : end;
-      let right = begin.x >= end.x ? begin : end;
-      
-      let vec = p5.Vector.sub(left, right);
-      let perp = vec.copy();
-      perp.rotate(-90);
-      perp.setMag(thickness);
-      
-      let topLeft = p5.Vector.add(left, perp);
-      let topRight = p5.Vector.add(right, perp);
-      let bottomLeft = p5.Vector.add(left, perp.mult(-1));
-      let bottomRight = p5.Vector.add(right, perp.mult(-1));
-      
-      let mousePos = createVector(mouseX, mouseY);
-      return this.isPointInQuad(mousePos, topLeft, topRight, bottomLeft, bottomRight);
+   // Inputs are assumed to be in world coordinates
+   drawVector(origin, vector, color, thickness){
+      origin = this.worldToScreenPosition(origin);
+      stroke(color);
+      strokeWeight(thickness);
+      line(origin.x, origin.y, origin.x + vector.x, origin.y + vector.y);
+   }
+
+
+   // Input is assumed to be in world coordinates
+   drawPoint(origin, color, thickness){
+      origin = this.worldToScreenPosition(origin);
+      noStroke();
+      fill(color);
+      ellipse(origin.x, origin.y, thickness);
    }
 
 
    // Return true if point is between all 4 points.
-   isPointInQuad(point, topLeft, topRight, bottomLeft, bottomRight){
-      let topBound = this.isPointAboveLine(point, topLeft, topRight);
-      let bottomBound = !this.isPointAboveLine(point, bottomLeft, bottomRight);
-      //let leftBound = this.isPointAboveLine(point, bottomLeft, topLeft);
-      //let rightBound = this.isPointAboveLine(point, topRight, bottomRight);
-      if(topBound && bottomBound){
+   isPointInQuad(point, topLeft, topRight, bottomRight, bottomLeft){
+      let withinTop = !this.isPointAboveLine(point, topLeft, topRight);
+      let withinBottom = this.isPointAboveLine(point, bottomLeft, bottomRight);
+      let withinLeft = this.isPointRightOfLine(point, bottomLeft, topLeft);
+      let withinRight = !this.isPointRightOfLine(point, topRight, bottomRight);
+
+      if(withinTop && withinBottom && withinLeft && withinRight){
          return true;
       }
       return false;
@@ -101,13 +102,24 @@ class World{
 
 
    // Return true if a point is above a line, false if on or below line.
-   // TODO: should probably check for divide-by-0
    isPointAboveLine(point, begin, end){
-      let m = (begin.y - end.y) / (begin.x - end.x);  // Slope
-      let b = begin.y - begin.x * m;   // Intercept
+      let m = this.findSlope(begin, end);
+      let b = this.findIntercept(begin, m);
       if(point.y < m * point.x + b){
          return true;
       }
+      return false;
+   }
+
+
+   // Return true if a point is to the right of a line, false if on or left of line.
+   isPointRightOfLine(point, begin, end){
+      let m = this.findSlope(begin, end);
+      let b = this.findIntercept(begin, m);
+      if(point.x > (point.y - b) / m){
+         return true;
+      }
+      return false;
    }
 
 
@@ -117,5 +129,14 @@ class World{
       screenPos.x = this.origin.x + worldPos.x;
       screenPos.y = this.origin.y + worldPos.y;
       return screenPos;
+   }
+
+
+   // Return the world position of a given screen position
+   screenToWorldPosition(screenPos){
+      let worldPos = createVector();
+      worldPos.x = screenPos.x - this.origin.x;
+      worldPos.y = screenPos.y - this.origin.y;
+      return worldPos;
    }
 }
