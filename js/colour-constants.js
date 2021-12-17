@@ -15,3 +15,4 @@ let GREEN = '#008000';
 let FUCHSIA = '#FF00FF';
 let BLUE = '#0000FF';
 let BLACK = '#000000';
+let WHITE = '#FFFFFF';

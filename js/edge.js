@@ -9,6 +9,7 @@ class Edge{
       this.endScreenPos;
       this.weight;
       this.gap = 15; // Visual distance between outer edge of nodes and start of the edge
+      this.lineThickness = 2;
       this.selectThickness = 10;  // Thickness of edge for mouse interaction
    }
 
@@ -17,7 +18,7 @@ class Edge{
    render(baseColor, highlightColor){
       this.updateEndPoints();
       if(this.show){
-         strokeWeight(2);
+         strokeWeight(this.lineThickness);
          stroke(this.isMouseOver() ? highlightColor : baseColor);
          line(this.beginScreenPos.x, this.beginScreenPos.y, this.endScreenPos.x, this.endScreenPos.y);
       }
@@ -26,8 +27,11 @@ class Edge{
 
    // Return true if mouse is over edge
    isMouseOver(){
+      if(!this.show){
+         return false;
+      }
       let mousePos = createVector(mouseX, mouseY);
-      return world.isPointOverLine(mousePos, this.beginScreenPos, this.endScreenPos, this.selectThickness);
+      return World.isPointOverLine(mousePos, this.beginScreenPos, this.endScreenPos, this.selectThickness);
    }
 
 

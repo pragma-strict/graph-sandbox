@@ -20,8 +20,8 @@ class Node{
       fill(this.isMouseOver() ? highlightColor : baseColor);
       ellipse(screenPos.x, screenPos.y, this.size);
 
-      // Draw the value
-      fill(255);
+      // Draw the value as text
+      fill(WHITE);
       textAlign(CENTER, CENTER);
       text(this.value, screenPos.x, screenPos.y);
    }
@@ -74,47 +74,5 @@ class Node{
          let mouseWorldPos = world.screenToWorldPosition(createVector(mouseX, mouseY));
          this.coordinates = mouseWorldPos.add(this.dragHandleOffset);
       }
-   }
-
-
-   // TODO: Move this to world.js as worldToScreenPosition()
-   getScreenPosition(){
-      let screenPos = createVector();
-      screenPos.x = world.origin.x + this.coordinates.x;
-      screenPos.y = world.origin.y + this.coordinates.y;
-      return screenPos;
-   }
-}
-
-
-/*
-   General base class for a node that's part of a tree
-*/
-class TreeNode extends Node{
-   constructor(value){
-      super(value);
-      this.edgeRefs = [];
-   }
-
-   hasChildren(){
-      if(this.neighborRefs.length > 0){
-         return true;
-      }
-      return false;
-   }
-
-   // Add a child node and return the new edge that was created
-   addChild(nodeRef){
-      this.neighborRefs.push(nodeRef);
-      this.edgeRefs.push(new Edge(this, nodeRef));
-      return this.edgeRefs[this.edgeRefs.length -1];
-   }
-
-   getChildren(){
-      return this.neighborRefs;
-   }
-
-   getChildByIndex(index){
-      return this.neighborRefs[index];
    }
 }
