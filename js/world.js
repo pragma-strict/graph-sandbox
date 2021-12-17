@@ -34,9 +34,12 @@ class World{
    }
 
 
-   // Return a new line that is trimmed on both ends
+   // Return a new line that is trimmed on both ends or false if there's no line left
    static trimLine(begin, end, trimLength){
       let offset = p5.Vector.sub(end, begin);
+      if(offset.mag() < trimLength){
+         return false;
+      }
       offset.setMag(trimLength / 2);
       let newBegin = p5.Vector.add(begin, offset);
       let newEnd = p5.Vector.add(end, offset.mult(-1));
@@ -49,6 +52,7 @@ class World{
 
    // Return true if point collides with a line with a given thickness
    // TODO: Add a rough collision check?
+   // TODO: Make static
    isPointOverLine(point, begin, end, thickness){
       let left = begin.x < end.x ? begin : end;
       let right = begin.x < end.x ? end : begin;

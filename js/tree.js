@@ -3,11 +3,12 @@ class Tree{
    constructor(){
       this.rootNode = new TreeNode(3);
       this.rootCoords;
-      this.selectedNode;
+      this.selectedElement;   // Either a node ref or edge ref
       this.nodeSize;
-      this.traversalStack = [this.rootNode];
-      this.hoveredColor = color(255, 255, 255, 50);
-      this.baseColor = 0;
+      this.nodeTraversal = [this.rootNode];
+      this.edgeList = [];
+      this.baseColor = BLACK;
+      this.hoveredColor = RED_LIGHT;
       this.selectedColor = RED;
    }
 
@@ -19,11 +20,12 @@ class Tree{
          this.rootNode = newNode;
       }
       else{
-         this.rootNode.addChild(newNode);
+         let newEdge = this.rootNode.addChild(newNode);
+         this.edgeList.push(newEdge);
       }
-      this.selectedNode = newNode;
-      this.traversalStack = [];
-      this.traversalStack = this.getPreorderTraversal(this.rootNode, this.traversalStack);
+      this.selectedElement = newNode;
+      this.nodeTraversal = [];
+      this.nodeTraversal = this.getPreorderTraversal(this.rootNode, this.nodeTraversal);
    }
 
 
@@ -50,9 +52,28 @@ class Tree{
 
    // Return a node ref if the mouse is over a node, else false
    getHoveredNode(){
-      for(let i = 0; i < this.traversalStack.length; i++){
-         if(this.traversalStack[i].isMouseOver()){
-            return this.traversalStack[i];
+      for(let i = 0; i < this.nodeTraversal.length; i++){
+         if(this.nodeTraversal[i].isMouseOver()){
+            return this.nodeTraversal[i];
+         }
+      }
+      return false;
+   }
+
+
+   // Return a ref to the node or edge the mouse is over, or false if not hovering
+   getHoveredElement(){
+      // Check nodes first
+      for(let i = 0; i < this.nodeTraversal.length; i++){
+         if(this.nodeTraversal[i].isMouseOver()){
+            return this.nodeTraversal[i];
+         }
+      }
+
+      // Check hovering over edges
+      for(let i = 0; i < this.edgeList.length; i++){
+         if(this.edgeList[i].isMouseOver()){
+            return this.edgeList[i];
          }
       }
       return false;
@@ -67,9 +88,9 @@ class Tree{
 
    // Return true if a node was selected
    mousePressed(){
-      this.selectedNode = this.getHoveredNode();
-      if(this.selectedNode){
-         this.selectedNode.mousePressed();
+      this.selectedElement = this.getHoveredElement();
+      if(this.selectedElement){
+         this.selectedElement.mousePressed();
          return true;
       }
       return false;
@@ -77,28 +98,52 @@ class Tree{
 
 
    mouseReleased(){
-      if(this.selectedNode){
-         this.selectedNode.mouseReleased();
+      if(this.selectedElement){
+         this.selectedElement.mouseReleased();
       }
    }
 
 
    mouseDragged(){
-      if(this.selectedNode){
-         this.selectedNode.mouseDragged();
+      if(this.selectedElement){
+         this.selectedElement.mouseDragged();
       }
    }
 
 
+   // Render all nodes and edges in the tree
    render(){
+      this.renderNodes();
+      this.renderEdges();
+   }
+
+
+   // Render all nodes
+   renderNodes(){
       if(this.rootNode){
-         for(let i = 0; i < this.traversalStack.length; i++){
-            let currentNode = this.traversalStack[i];
-            if(currentNode === this.selectedNode){
+         for(let i = 0; i < this.nodeTraversal.length; i++){
+            let currentNode = this.nodeTraversal[i];
+            if(currentNode === this.selectedElement){
                currentNode.render(this.selectedColor, this.hoveredColor);
             }
             else{
                currentNode.render(this.baseColor, this.hoveredColor);
+            }
+         }
+      }
+   }
+
+
+   // Render all edges
+   renderEdges(){
+      if(this.rootNode){
+         for(let i = 0; i < this.edgeList.length; i++){
+            let currentEdge = this.edgeList[i];
+            if(currentEdge === this.selectedElement){
+               currentEdge.render(this.selectedColor, this.hoveredColor);
+            }
+            else{
+               currentEdge.render(this.baseColor, this.hoveredColor);
             }
          }
       }

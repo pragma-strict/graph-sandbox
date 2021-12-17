@@ -15,32 +15,12 @@ class Node{
 
    render(baseColor, highlightColor){
       let screenPos = world.worldToScreenPosition(this.coordinates);
-      let mousePos = createVector(mouseX, mouseY);
-      
-      // Draw lines to neighbors
-      strokeWeight(2);
-      for(let i = 0; i < this.neighborRefs.length; i++){
-         stroke(0);
-         let neighborScreenPos = world.worldToScreenPosition(this.neighborRefs[i].coordinates);
-         if(world.isPointOverLine(mousePos, screenPos, neighborScreenPos, 10)){
-            stroke(RED);
-         }
-         let edge = World.trimLine(screenPos, neighborScreenPos, 40);
-         line(edge.begin.x, edge.begin.y, edge.end.x, edge.end.y);
-      }
 
-      // Draw the ellipse
       noStroke();
-      fill(baseColor);
+      fill(this.isMouseOver() ? highlightColor : baseColor);
       ellipse(screenPos.x, screenPos.y, this.size);
 
-      // Add a highlight if mouse is over
-      if(this.isMouseOver(world.origin)){
-         fill(highlightColor);
-         ellipse(screenPos.x, screenPos.y, this.size);
-      }
-
-      // Draw the text
+      // Draw the value
       fill(255);
       textAlign(CENTER, CENTER);
       text(this.value, screenPos.x, screenPos.y);
@@ -53,7 +33,7 @@ class Node{
    }
 
 
-   //
+   // TODO: Make it do stuff
    removeNeighborByIndex(index){
       if(index >= 0 && index < this.neighborRefs.length){
          // perform removal
@@ -69,12 +49,6 @@ class Node{
          return true;
       }
       return false;
-   }
-
-
-   // Return true if mouse is over the edge between two nodes
-   static isMouseOverEdge(n1, n2){
-      return world.isMouseOverLine(n1.coordinates, n2.coordinates, 10)
    }
 
 
@@ -119,6 +93,7 @@ class Node{
 class TreeNode extends Node{
    constructor(value){
       super(value);
+      this.edgeRefs = [];
    }
 
    hasChildren(){
@@ -128,8 +103,11 @@ class TreeNode extends Node{
       return false;
    }
 
+   // Add a child node and return the new edge that was created
    addChild(nodeRef){
       this.neighborRefs.push(nodeRef);
+      this.edgeRefs.push(new Edge(this, nodeRef));
+      return this.edgeRefs[this.edgeRefs.length -1];
    }
 
    getChildren(){
