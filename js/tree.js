@@ -24,6 +24,12 @@ class Tree{
          this.edgeList.push(newEdge);
       }
       this.selectedElement = newNode;
+      this.generatePreorderTraversal();
+   }
+
+
+   // Set the tree traversal to a newly-generated preorder traversal
+   generatePreorderTraversal(){
       this.nodeTraversal = [];
       this.nodeTraversal = this.getPreorderTraversal(this.rootNode, this.nodeTraversal);
    }

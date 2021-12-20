@@ -33,6 +33,8 @@ function setup() {
   tree = new Tree();
   tree.addTreeNode(4);
   tree.addTreeNode(5);
+  tree.addTreeNode(6);
+  tree.addTreeNode(5);
 }
 
 
