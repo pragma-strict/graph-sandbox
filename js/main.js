@@ -12,6 +12,7 @@
   - Make an add node hotkey
   - Make a dynamic HTML interface (left-click menu) to make styling easier and more consistent. This menu will appear when left clicking (to make desktop/mobile compatibility easier) and will be used for things like adding nodes, which could also be done via hotkey 
   - Integrate typescript because I'm tired of bugs that don't give errors
+  - Store node size in the trees and container structures. Pass it as a param to node render functions.
 */
 
 // DOM Ids and elements
@@ -37,7 +38,7 @@ function setup() {
   tree.addNode(3);
   tree.addNode(2);
   tree.addNode(3.5);
-  tree.printTraversal();
+  tree.updatePos();
 }
 
 

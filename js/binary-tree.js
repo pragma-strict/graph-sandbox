@@ -19,6 +19,66 @@ class BinaryTree extends Tree{
    }
 
 
+   // Adjust node positions so they're arranged as a binary tree
+   updatePos(){
+      let minNodeSpacing = this.rootNode.size + 25;
+      let rootLevelsBeforeLast = this.getHeight();
+      let rootPosition = createVector(0, -minNodeSpacing * (rootLevelsBeforeLast -1 ) / 2);
+      this.updatePosRecursiveStep(this.rootNode, minNodeSpacing, rootLevelsBeforeLast, rootPosition);
+   }
+
+
+   // Adjust node positions so they're arranged as a binary tree
+   updatePosRecursiveStep(node, minSpacing, levelsBeforeLast, pos){
+      let childOffsetX = Math.pow(2, levelsBeforeLast -1) * minSpacing /4;
+      let leftPos = createVector(pos.x - childOffsetX, pos.y + minSpacing);
+      let rightPos = createVector(pos.x + childOffsetX, pos.y + minSpacing);
+      
+      // Assign position to this node
+      node.coordinates = pos;
+
+      // Recursively position left and right children
+      if(node.hasLeft()){
+         this.updatePosRecursiveStep(node.left, minSpacing, levelsBeforeLast - 1, leftPos);
+      }
+      if(node.hasRight()){
+         this.updatePosRecursiveStep(node.right, minSpacing, levelsBeforeLast - 1, rightPos);
+      }
+   }
+
+
+   // 
+   getHeight(){
+      let currentLevel = [this.rootNode];
+      let nextLevel = [];
+      let currentDepth = 0;
+      let isLastLevel;
+
+      while(!isLastLevel){
+         isLastLevel = true;
+
+         // Go through all the nodes in this level and add their children to the next level
+         for(let i = 0; i < currentLevel.length; i++){
+            let left = currentLevel[i].left;
+            let right = currentLevel[i].right;
+            if(left){
+               nextLevel.push(left);
+               isLastLevel = false;
+            }
+            if(right){
+               nextLevel.push(right);
+               isLastLevel = false;
+            }
+         }
+
+         currentLevel = [...nextLevel];
+         nextLevel = [];
+         currentDepth++;
+      }
+      return currentDepth;
+   }
+
+
    // Generate level-order traversal for the tree
    generateLevelOrderTraversal(){
       this.traversalType = "level-order";
@@ -51,38 +111,6 @@ class BinaryTree extends Tree{
          currentDepth++;
       }
       return this.nodeTraversal;
-   }
-
-
-   // Untested
-   getHeight(){
-      let currentLevel = [this.rootNode];
-      let nextLevel = [];
-      let currentDepth = 0;
-      let isLastLevel;
-
-      while(!isLastLevel){
-         isLastLevel = true;
-
-         // Go through all the nodes in this level and add their children to the next level
-         for(let i = 0; i < currentLevel.length; i++){
-            let left = currentLevel[i].left;
-            let right = currentLevel[i].right;
-            if(left){
-               nextLevel.push(left);
-               isLastLevel = false;
-            }
-            if(right){
-               nextLevel.push(right);
-               isLastLevel = false;
-            }
-         }
-
-         currentLevel = [...nextLevel];
-         nextLevel = [];
-         currentDepth++;
-      }
-      return currentDepth;
    }
 
 

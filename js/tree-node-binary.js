@@ -1,7 +1,7 @@
 /*
    Basic node for a binary tree. Contains a left and right child.
 */
-class BinaryNode extends Node{
+class BinaryNode extends TreeNode{
    constructor(value){
       super(value);
       this.left = null;
@@ -18,6 +18,7 @@ class BinaryNode extends Node{
          }
          else{
             this.left = node;
+            this.left.depth = this.depth + 1;
             this.leftEdge = new Edge(this, node);
             return this.leftEdge;
          }
@@ -28,6 +29,7 @@ class BinaryNode extends Node{
          }
          else{
             this.right = node;
+            this.right.depth = this.depth + 1;
             this.rightEdge = new Edge(this, node);
             return this.rightEdge;
          }

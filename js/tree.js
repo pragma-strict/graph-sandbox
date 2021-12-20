@@ -130,6 +130,12 @@ class Tree{
    }
 
 
+   // Adjust positions of all nodes so they aren't too close to each other
+   updateNodePositions(){
+
+   }
+
+
    // Render all nodes and edges in the tree
    render(){
       this.renderNodes();
