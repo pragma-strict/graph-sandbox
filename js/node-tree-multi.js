@@ -15,8 +15,8 @@ class TreeNodeMulti extends TreeNode{
       return false;
    }
 
-   // Add a child node and return the new edge that was created
-   addChild(nodeRef){
+   // Add a node below this one and return the new edge that was created
+   insert(nodeRef){
       this.childRefs.push(nodeRef);
       this.edgeRefs.push(new Edge(this, nodeRef));
       return this.edgeRefs[this.edgeRefs.length -1];

@@ -16,7 +16,7 @@ class Tree{
 
    // Adds a new node to the tree with the given value.
    // Currently just adds the new node as a child of the root.
-   addNode(value){
+   createNode(value){
       let newNode = new TreeNode(value);
       if(!this.rootNode){
          this.rootNode = newNode;
@@ -130,8 +130,8 @@ class Tree{
    }
 
 
-   // Adjust positions of all nodes so they aren't too close to each other
-   updateNodePositions(){
+   // Adjust positions of all nodes so they aren't too close to each other or something
+   updatePos(){
 
    }
 

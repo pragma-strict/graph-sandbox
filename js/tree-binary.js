@@ -4,18 +4,49 @@ class BinaryTree extends Tree{
    }
 
 
-   // Add a node to the binary tree
-   addNode(value){
-      let newNode = new BinaryNode(value);
-      if(!this.rootNode){
-         this.rootNode = newNode;
+   // Add a node to the binary tree, starting with the root
+   createNode(value){
+      if(this.rootNode){
+         this.createNodeAt(this.rootNode, value);
       }
       else{
-         let newEdge = this.rootNode.insert(newNode);
-         this.edgeList.push(newEdge);
+         this.createRoot(value);
       }
-      this.selectedElement = newNode;
-      this.generateLevelOrderTraversal();
+   }
+
+
+   // Create and set the root node if there isn't already one
+   createRoot(value){
+      if(!this.rootNode){
+         let newNode = new BinaryNode(value);
+         this.rootNode = newNode;
+         this.selectedElement = newNode;
+         this.generateLevelOrderTraversal();
+         this.updatePos();
+      }
+   }
+
+
+   // Add a node to the subtree of the selected node, if there is one
+   createNodeAtSelected(value){
+      if(this.selectedElement){
+         if(this.selectedElement.constructor.name === "BinaryNode"){
+            this.createNodeAt(this.selectedElement, value);
+         }
+      }
+   }
+
+
+   // Add node to the subtree of given node if given node is included in the current tree
+   createNodeAt(node, value){
+      if(this.nodeTraversal.includes(node)){
+         let newNode = new BinaryNode(value);
+         let newEdge = node.insert(newNode);
+         this.edgeList.push(newEdge);
+         this.selectedElement = newNode;
+         this.generateLevelOrderTraversal();
+         this.updatePos();
+      }
    }
 
 
@@ -133,5 +164,12 @@ class BinaryTree extends Tree{
          traversal.concat(this.getPreorderTraversal(right, traversal));
       }
       return traversal;
+   }
+
+
+   keyPressed(){
+      if(key == 'a'){
+         this.createNodeAtSelected(5);
+      }
    }
 }

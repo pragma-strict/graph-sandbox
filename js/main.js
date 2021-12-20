@@ -13,6 +13,9 @@
   - Make a dynamic HTML interface (left-click menu) to make styling easier and more consistent. This menu will appear when left clicking (to make desktop/mobile compatibility easier) and will be used for things like adding nodes, which could also be done via hotkey 
   - Integrate typescript because I'm tired of bugs that don't give errors
   - Store node size in the trees and container structures. Pass it as a param to node render functions.
+  - Remove the pointless TreeNode class and just have binary and multi nodes both inherit directly from Node
+  - Set up the tree base class to use multi-nodes by default. 
+  - Proliferate the more specific node creation functions from BinaryTree to the general trees
 */
 
 // DOM Ids and elements
@@ -32,12 +35,12 @@ function setup() {
   angleMode(DEGREES);
   world = new World();
   tree = new BinaryTree();
-  tree.addNode(4);
-  tree.addNode(5);
-  tree.addNode(6);
-  tree.addNode(3);
-  tree.addNode(2);
-  tree.addNode(3.5);
+  tree.createNode(4);
+  tree.createNode(5);
+  tree.createNode(6);
+  tree.createNode(3);
+  tree.createNode(2);
+  tree.createNode(3.5);
   tree.updatePos();
 }
 
@@ -126,9 +129,7 @@ function mouseDragged(){
 
 
 function keyPressed(){
-  if(keyCode === ENTER){
-    
-  }
+  tree.keyPressed();
 }
 
 
