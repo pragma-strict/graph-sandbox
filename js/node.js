@@ -1,12 +1,12 @@
 /*
-   General base class for a node in a graph
+   General base class for a node in a graph. 
+   Mostly just contains drawing, a value, position, and dragging.
 */
 class Node{
    constructor(value){
       this.value = value;
       this.coordinates = createVector();
       this.size = 25;
-      this.neighborRefs = [];
       this.state = 0;   // Used during traversals to avoid checking the same node more than once
       this.isDragging = false;
       this.dragHandleOffset = createVector();   // Relative mouse pos when dragging
@@ -24,20 +24,6 @@ class Node{
       fill(WHITE);
       textAlign(CENTER, CENTER);
       text(this.value, screenPos.x, screenPos.y);
-   }
-
-
-   // 
-   addNeighbor(nodeRef){
-      this.neighborRefs.push(nodeRef);
-   }
-
-
-   // TODO: Make it do stuff
-   removeNeighborByIndex(index){
-      if(index >= 0 && index < this.neighborRefs.length){
-         // perform removal
-      }
    }
 
 

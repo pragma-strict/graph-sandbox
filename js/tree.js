@@ -1,11 +1,12 @@
 
 class Tree{
    constructor(){
-      this.rootNode = new TreeNode(3);
+      this.rootNode;
       this.rootCoords;
       this.selectedElement;   // Either a node ref or edge ref
       this.nodeSize;
-      this.nodeTraversal = [this.rootNode];
+      this.nodeTraversal = [this.rootNode];  // A traversal of the tree
+      this.traversalType = "";
       this.edgeList = [];
       this.baseColor = BLACK;
       this.hoveredColor = RED_LIGHT;
@@ -13,8 +14,9 @@ class Tree{
    }
 
 
-   // Adds a new node to the tree with the given value
-   addTreeNode(value){
+   // Adds a new node to the tree with the given value.
+   // Currently just adds the new node as a child of the root.
+   addNode(value){
       let newNode = new TreeNode(value);
       if(!this.rootNode){
          this.rootNode = newNode;
@@ -32,6 +34,7 @@ class Tree{
    generatePreorderTraversal(){
       this.nodeTraversal = [];
       this.nodeTraversal = this.getPreorderTraversal(this.rootNode, this.nodeTraversal);
+      this.traversalType = "pre-order";
    }
 
 
@@ -43,6 +46,16 @@ class Tree{
          traversal.concat(this.getPreorderTraversal(child, traversal));
       });
       return traversal;
+   }
+
+
+   // 
+   printTraversal(){
+      let traversalString = "Current traversal (" + this.traversalType + "): ";
+      this.nodeTraversal.forEach((node) => {
+         traversalString += (node.value + ", ");
+      });
+      console.log(traversalString.slice(0, -2));
    }
 
 
@@ -155,7 +168,6 @@ class Tree{
       }
    }
 }
-
 
 
 // Recursively return an array containing each node in a post-order traversal.

@@ -30,11 +30,14 @@ function setup() {
   initializeP5Canvas();
   angleMode(DEGREES);
   world = new World();
-  tree = new Tree();
-  tree.addTreeNode(4);
-  tree.addTreeNode(5);
-  tree.addTreeNode(6);
-  tree.addTreeNode(5);
+  tree = new BinaryTree();
+  tree.addNode(4);
+  tree.addNode(5);
+  tree.addNode(6);
+  tree.addNode(3);
+  tree.addNode(2);
+  tree.addNode(3.5);
+  tree.printTraversal();
 }
 
 

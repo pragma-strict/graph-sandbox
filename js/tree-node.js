@@ -5,6 +5,7 @@ class TreeNode extends Node{
    constructor(value){
       super(value);
       this.edgeRefs = [];
+      this.neighborRefs = [];
    }
 
    hasChildren(){
