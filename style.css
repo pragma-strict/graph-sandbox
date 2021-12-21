@@ -45,6 +45,11 @@ body {
   grid-row: 3;
 }
 
+#p5-context-menu {
+  position: relative;
+  z-index: 1;
+}
+
 canvas {
   position: relative;
   border-style: solid;
