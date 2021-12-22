@@ -29,6 +29,7 @@ let tree;
 let contextMenu;
 
 let mouseDownTime;  // The system time when mouse was pressed. Used to calculate long/short clicks.
+let mouseDownPos; // The mouse position when it was pressed. Used to check for dragging.
 
 let inputRaw = [];
 let iterations = 0;
@@ -108,6 +109,7 @@ function mousePressed(){
   if(tree.isMouseOver()){
     let date = new Date();
     mouseDownTime = date.getTime();
+    mouseDownPos = createVector(mouseX, mouseY);
     tree.mousePressed();
   }
   else{
@@ -120,11 +122,14 @@ function mouseReleased(){
   world.mouseReleased();
   tree.mouseReleased();
 
-  // Open the context menu if short click was released over tree
+  // Open the context menu if conditions are met
   let nodeUnderMouse = tree.getHoveredNode();
-  if(nodeUnderMouse && getTimeSinceClick() < 250){
-    contextMenu.generateNodeMenu();
-    contextMenu.open();
+  if(nodeUnderMouse){
+    let mousePositionDelta = createVector(mouseX, mouseY).sub(mouseDownPos);
+    if(getTimeSinceClick() < 250 && mousePositionDelta.mag() == 0){
+      contextMenu.generateNodeMenu();
+      contextMenu.open();
+    }
   }
   else{
     contextMenu.close();
