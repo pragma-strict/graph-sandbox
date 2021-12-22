@@ -4,7 +4,7 @@
 
 class ContextMenu{
    constructor(elementId){
-      this.element = document.getElementById(elementId);
+      this.element = document.getElementById(elementId)
       this.hidden = false;
       this.height = 0;
    }
@@ -40,6 +40,18 @@ class ContextMenu{
    addButton(contents, func){
       this.element.innerHTML += "<a href='#' onclick='" + func + "'>" + contents + "</a>";
       this.height = parseInt(window.getComputedStyle(this.element).height.slice(0, -2));
+   }
+
+
+   close(){
+      this.hide();
+   }
+   
+   
+   // Opens the menu at the position of the mouse
+   open(){
+      this.show();
+      this.updatePosition();
    }
 }
 

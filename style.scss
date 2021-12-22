@@ -30,6 +30,7 @@ body{
 #p5-canvas-container{
    grid-column: 2;
    grid-row: 2;
+   position: relative;
 }
 
 #p5-interface{
@@ -37,9 +38,14 @@ body{
    grid-row: 3;
 }
 
-#p5-context-menu{
-   position: relative;
+#p5-context-menu-container{
+   position: absolute;
+   display: block;
    z-index: 1;
+   a{
+      background-color: whitesmoke;
+      display: block;
+   }
 }
 
 canvas{
