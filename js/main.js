@@ -26,7 +26,7 @@ let INTERFACE_DATA;
 let canvas;
 
 let tree;
-let addMenu;
+let contextMenu;
 
 let mouseDownTime;  // The system time when mouse was pressed. Used to calculate long/short clicks.
 
@@ -38,14 +38,10 @@ function setup() {
   initializeP5Canvas();
   angleMode(DEGREES);
   world = new World();
-  addMenu = new ContextMenu("p5-context-menu-container");
-  addMenu.addButton("Test Button", 'menu.foo()');
-  addMenu.addButton("Add Node", 'tree.createNode(10)');
+  contextMenu = new ContextMenu("p5-context-menu");
+  
   tree = new BinaryTree();
-  tree.createNode(4);
-  tree.createNode(5);
-  tree.createNode(6);
-  tree.updatePos();
+  tree.createRoot(4);
 }
 
 
@@ -108,12 +104,14 @@ function parseInputData(){
 
 // Logs the mouse position relative to the origin so that the 
 // origin can be repositioned relative to the mouse during mouse drag.
-// TODO: Call a less confusing function to determine whether mouse is over the tree
 function mousePressed(){
-  if(!tree.mousePressed()){
-    world.mousePressed();
+  if(tree.isMouseOver()){
     let date = new Date();
     mouseDownTime = date.getTime();
+    tree.mousePressed();
+  }
+  else{
+    world.mousePressed();
   }
 }
 
@@ -121,12 +119,15 @@ function mousePressed(){
 function mouseReleased(){
   world.mouseReleased();
   tree.mouseReleased();
-  let date = new Date();
-  if(date.getTime() - mouseDownTime < 250){
-    addMenu.open()
-  }else{
-    addMenu.close();
 
+  // Open the context menu if short click was released over tree
+  let nodeUnderMouse = tree.getHoveredNode();
+  if(nodeUnderMouse && getTimeSinceClick() < 250){
+    contextMenu.generateNodeMenu();
+    contextMenu.open();
+  }
+  else{
+    contextMenu.close();
   }
 }
 
@@ -144,6 +145,13 @@ function mouseDragged(){
 
 function keyPressed(){
   tree.keyPressed();
+}
+
+
+// Return time since last mouse down
+function getTimeSinceClick(){
+  let date = new Date();
+  return date.getTime() - mouseDownTime;
 }
 
 

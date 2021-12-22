@@ -14,19 +14,49 @@ class Tree{
    }
 
 
-   // Adds a new node to the tree with the given value.
-   // Currently just adds the new node as a child of the root.
-   createNode(value){
+   // Creates and adds a root node. If a root node exists, this will replace the entire tree
+   createRoot(value){
       let newNode = new TreeNode(value);
-      if(!this.rootNode){
-         this.rootNode = newNode;
+      if(this.rootNode){
+         this.edgeList = [];
       }
-      else{
-         let newEdge = this.rootNode.addChild(newNode);
-         this.edgeList.push(newEdge);
-      }
+      this.rootNode = newNode;
       this.selectedElement = newNode;
       this.generatePreorderTraversal();
+   }
+
+
+   // Creates and adds a node as the child of a given node
+   createNodeAt(parentRef, value){
+      if(this.nodeTraversal.includes(node)){
+         let newNode = new TreeNode(value);
+         let newEdge = node.insert(newNode);
+         this.edgeList.push(newEdge);
+         this.selectedElement = newNode;
+         this.generateLevelOrderTraversal();
+         this.updatePos();
+      }
+   }
+
+
+   // Creates and adds a new node to the root with the given value.
+   createNodeAtRoot(value){
+      if(this.rootNode){
+         this.createNodeAt(this.rootNode, value);
+      }
+      else{
+         this.createRoot(value);
+      }
+   }
+
+
+   // Add a node to the subtree of the selected node, if there is one
+   createNodeAtSelected(value){
+      if(this.selectedElement){
+         if(this.selectedElement.constructor.name === "BinaryNode"){
+            this.createNodeAt(this.selectedElement, value);
+         }
+      }
    }
 
 
@@ -99,7 +129,16 @@ class Tree{
    }
 
 
-   // Return a node ref if the mouse is over a node, else false. Alias for getHoveredNode()
+   // Return the selected node or false if there isn't one
+   getSelectedNode(){
+      if(this.selectedElement.constructor.name === "BinaryNode"){
+         return this.selectedElement;
+      }
+      return false;
+   }
+
+
+   // Return a node ref if the mouse is over a node, else false.
    isMouseOver(){
       return this.getHoveredNode();
    }

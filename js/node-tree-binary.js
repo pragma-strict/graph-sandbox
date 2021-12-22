@@ -10,6 +10,7 @@ class BinaryNode extends TreeNode{
       this.rightEdge = null;
    }
 
+
    // Add a node, either as a child or as a descendant and return the new edge that was created
    insert(node){
       if(node.value <= this.value){

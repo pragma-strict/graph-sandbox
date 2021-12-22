@@ -4,39 +4,20 @@ class BinaryTree extends Tree{
    }
 
 
-   // Add a node to the binary tree, starting with the root
-   createNode(value){
-      if(this.rootNode){
-         this.createNodeAt(this.rootNode, value);
-      }
-      else{
-         this.createRoot(value);
-      }
-   }
-
-
-   // Create and set the root node if there isn't already one
+   // Creates and adds a root node. If a root node exists, this will replace the entire tree
+   // TODO: This and createNodeAt() might be able to combined into super class if newNode can be created of this.type
    createRoot(value){
-      if(!this.rootNode){
-         let newNode = new BinaryNode(value);
-         this.rootNode = newNode;
-         this.selectedElement = newNode;
-         this.generateLevelOrderTraversal();
-         this.updatePos();
+      let newNode = new BinaryNode(value);
+      if(this.rootNode){
+         this.edgeList = [];
       }
+      this.rootNode = newNode;
+      this.selectedElement = newNode;
+      this.generatePreorderTraversal();
+      this.updatePos();
    }
-
-
-   // Add a node to the subtree of the selected node, if there is one
-   createNodeAtSelected(value){
-      if(this.selectedElement){
-         if(this.selectedElement.constructor.name === "BinaryNode"){
-            this.createNodeAt(this.selectedElement, value);
-         }
-      }
-   }
-
-
+   
+   
    // Add node to the subtree of given node if given node is included in the current tree
    createNodeAt(node, value){
       if(this.nodeTraversal.includes(node)){

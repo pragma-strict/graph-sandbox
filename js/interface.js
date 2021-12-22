@@ -30,15 +30,22 @@ class ContextMenu{
    }
 
 
-   foo(){
-      console.log("button clicked!");
-      this.hide();
+   // Set up the menu such as it should be when clicking on nodes
+   generateNodeMenu(){
+      this.clear();
+      this.addButton("Add Node", "tree.createNodeAtSelected(2)");
+   }
+
+
+   // Remove all buttons and content
+   clear(){
+      this.element.innerHTML = "";
    }
 
 
    // Add a button to the menu
-   addButton(contents, func){
-      this.element.innerHTML += "<a href='#' onclick='" + func + "'>" + contents + "</a>";
+   addButton(title, func){
+      this.element.innerHTML += "<a href='#' onclick=" + func + ">" + title + "</a>";
       this.height = parseInt(window.getComputedStyle(this.element).height.slice(0, -2));
    }
 
@@ -50,8 +57,8 @@ class ContextMenu{
    
    // Opens the menu at the position of the mouse
    open(){
-      this.show();
       this.updatePosition();
+      this.show();
    }
 }
 
