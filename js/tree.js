@@ -17,7 +17,7 @@ class Tree{
    // Creates and adds a root node. If a root node exists, this will replace the entire tree
    createRoot(value){
       let newNode = new TreeNode(value);
-      if(this.rootNode){
+      if(this.hasRoot()){
          this.edgeList = [];
       }
       this.rootNode = newNode;
@@ -30,7 +30,7 @@ class Tree{
    createNodeAt(parentRef, value){
       if(this.nodeTraversal.includes(node)){
          let newNode = new TreeNode(value);
-         let newEdge = node.insert(newNode);
+         let newEdge = parentRef.insert(newNode);
          this.edgeList.push(newEdge);
          this.selectedElement = newNode;
          this.generateLevelOrderTraversal();
@@ -41,7 +41,7 @@ class Tree{
 
    // Creates and adds a new node to the root with the given value.
    createNodeAtRoot(value){
-      if(this.rootNode){
+      if(this.hasRoot()){
          this.createNodeAt(this.rootNode, value);
       }
       else{
@@ -60,6 +60,16 @@ class Tree{
    }
 
 
+   // Removes all nodes from the tree
+   clear(){
+      this.rootNode = null;
+      this.nodeTraversal = [];
+      this.traversalType = "";
+      this.edgeList = [];
+      this.selectedElement = null;
+   }
+
+
    // Set the tree traversal to a newly-generated preorder traversal
    generatePreorderTraversal(){
       this.nodeTraversal = [];
@@ -70,12 +80,15 @@ class Tree{
 
    // Recursively return an array containing each node in a pre-order traversal.
    getPreorderTraversal(node, traversal){
-      traversal.push(node);
-      let children = node.getChildren();
-      children.forEach(child => {
-         traversal.concat(this.getPreorderTraversal(child, traversal));
-      });
-      return traversal;
+      if(this.hasRoot){
+         traversal.push(node);
+         let children = node.getChildren();
+         children.forEach(child => {
+            traversal.concat(this.getPreorderTraversal(child, traversal));
+         });
+         return traversal;
+      }
+      return [];
    }
 
 
@@ -86,6 +99,21 @@ class Tree{
          traversalString += (node.value + ", ");
       });
       console.log(traversalString.slice(0, -2));
+   }
+
+
+   // Return true if this tree has a root node
+   hasRoot(){
+      return !this.isEmpty();
+   }
+
+
+   // Return true if this tree has no nodes
+   isEmpty(){
+      if(!this.rootNode){
+         return true;
+      }
+      return false;
    }
 
 
@@ -101,9 +129,11 @@ class Tree{
 
    // Return a node ref if the mouse is over a node, else false
    getHoveredNode(){
-      for(let i = 0; i < this.nodeTraversal.length; i++){
-         if(this.nodeTraversal[i].isMouseOver()){
-            return this.nodeTraversal[i];
+      if(this.hasRoot()){
+         for(let i = 0; i < this.nodeTraversal.length; i++){
+            if(this.nodeTraversal[i].isMouseOver()){
+               return this.nodeTraversal[i];
+            }
          }
       }
       return false;
@@ -112,17 +142,19 @@ class Tree{
 
    // Return a ref to the node or edge the mouse is over, or false if not hovering
    getHoveredElement(){
-      // Check nodes first
-      for(let i = 0; i < this.nodeTraversal.length; i++){
-         if(this.nodeTraversal[i].isMouseOver()){
-            return this.nodeTraversal[i];
+      if(this.hasRoot()){
+         // Check nodes first
+         for(let i = 0; i < this.nodeTraversal.length; i++){
+            if(this.nodeTraversal[i].isMouseOver()){
+               return this.nodeTraversal[i];
+            }
          }
-      }
-
-      // Check hovering over edges
-      for(let i = 0; i < this.edgeList.length; i++){
-         if(this.edgeList[i].isMouseOver()){
-            return this.edgeList[i];
+   
+         // Check hovering over edges
+         for(let i = 0; i < this.edgeList.length; i++){
+            if(this.edgeList[i].isMouseOver()){
+               return this.edgeList[i];
+            }
          }
       }
       return false;
@@ -131,8 +163,10 @@ class Tree{
 
    // Return the selected node or false if there isn't one
    getSelectedNode(){
-      if(this.selectedElement.constructor.name === "BinaryNode"){
-         return this.selectedElement;
+      if(this.selectedElement){
+         if(this.selectedElement.constructor.name === "BinaryNode"){
+            return this.selectedElement;
+         }
       }
       return false;
    }
@@ -184,7 +218,7 @@ class Tree{
 
    // Render all nodes
    renderNodes(){
-      if(this.rootNode){
+      if(this.hasRoot()){
          for(let i = 0; i < this.nodeTraversal.length; i++){
             let currentNode = this.nodeTraversal[i];
             if(currentNode === this.selectedElement){
@@ -200,7 +234,7 @@ class Tree{
 
    // Render all edges
    renderEdges(){
-      if(this.rootNode){
+      if(this.hasRoot()){
          for(let i = 0; i < this.edgeList.length; i++){
             let currentEdge = this.edgeList[i];
             if(currentEdge === this.selectedElement){

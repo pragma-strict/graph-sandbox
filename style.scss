@@ -33,6 +33,14 @@ body{
    position: relative;
 }
 
+#interface-data-wrapper{
+   padding-top: 1rem;
+   
+   input{
+      width: 100%;
+   }
+}
+
 #p5-interface{
    grid-column: 2;
    grid-row: 3;

@@ -4,6 +4,14 @@ class BinaryTree extends Tree{
    }
 
 
+   // Creates and adds nodes from an array of values
+   createNodes(arr){
+      arr.forEach((value) => {
+         this.createNodeAtRoot(value);
+      });
+   }
+
+
    // Creates and adds a root node. If a root node exists, this will replace the entire tree
    // TODO: This and createNodeAt() might be able to combined into super class if newNode can be created of this.type
    createRoot(value){

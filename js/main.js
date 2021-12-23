@@ -40,9 +40,7 @@ function setup() {
   angleMode(DEGREES);
   world = new World();
   contextMenu = new ContextMenu("p5-context-menu");
-  
   tree = new BinaryTree();
-  tree.createRoot(4);
 }
 
 
@@ -70,6 +68,8 @@ function draw(){
 function getInput(){
   inputRaw = [];
   parseInputData();
+  tree.clear();
+  tree.createNodes(inputRaw);
 }
 
 
