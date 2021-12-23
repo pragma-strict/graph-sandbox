@@ -103,17 +103,28 @@ function parseInputData(){
 }
 
 
+// 
+function isMouseOverCanvas(){
+  if(mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height){
+    return true;
+  }
+  return false;
+}
+
+
 // Logs the mouse position relative to the origin so that the 
 // origin can be repositioned relative to the mouse during mouse drag.
 function mousePressed(){
-  if(tree.isMouseOver()){
-    let date = new Date();
-    mouseDownTime = date.getTime();
-    mouseDownPos = createVector(mouseX, mouseY);
-    tree.mousePressed();
-  }
-  else{
-    world.mousePressed();
+  if(isMouseOverCanvas()){
+    if(tree.isMouseOver()){
+      let date = new Date();
+      mouseDownTime = date.getTime();
+      mouseDownPos = createVector(mouseX, mouseY);
+      tree.mousePressed();
+    }
+    else{
+      world.mousePressed();
+    }
   }
 }
 
@@ -139,11 +150,13 @@ function mouseReleased(){
 
 // Reposition the origin
 function mouseDragged(){
-  if(world.isDragging){
-    world.mouseDragged();
-  }
-  else{
-    tree.mouseDragged();
+  if(isMouseOverCanvas()){
+    if(world.isDragging){
+      world.mouseDragged();
+    }
+    else{
+      tree.mouseDragged();
+    }
   }
 }
 
