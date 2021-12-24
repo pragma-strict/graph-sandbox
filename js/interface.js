@@ -33,7 +33,7 @@ class ContextMenu{
    // Set up the menu such as it should be when clicking on nodes
    generateNodeMenu(){
       this.clear();
-      this.addButton("Add Node", "tree.createNodeAtSelected(2)");
+      this.addButton("Remove Node", "tree.removeSelectedNode()");
    }
 
 

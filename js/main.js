@@ -41,6 +41,7 @@ function setup() {
   world = new World();
   contextMenu = new ContextMenu("p5-context-menu");
   tree = new BinaryTree();
+  getInput();
 }
 
 

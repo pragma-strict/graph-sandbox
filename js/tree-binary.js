@@ -39,6 +39,21 @@ class BinaryTree extends Tree{
    }
 
 
+   removeSelectedNode(){
+      if(this.selectedElement instanceof BinaryNode){
+         this.selectedElement.remove();
+      }
+   }
+
+
+   // 
+   removeNodeAt(node){
+      if(this.nodeTraversal.includes(node)){
+
+      }
+   }
+
+
    // Adjust node positions so they're arranged as a binary tree
    updatePos(){
       let minNodeSpacing = this.rootNode.size + 25;
@@ -158,7 +173,7 @@ class BinaryTree extends Tree{
 
    keyPressed(){
       if(key == 'a'){
-         this.createNodeAtSelected(5);
+         this.selectedElement.getNearestDescendant();
       }
    }
 }
